@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html data-ng-app="MyApp">
+
+<head>
+  <script data-require="angularjs@1.5.5" data-semver="1.5.5" src="https://code.angularjs.org/1.5.5/angular.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js"></script>
+</head>
+
+<body data-ng-controller="InvoiceController as invoice">
+    <h2>Currency Converter</h2>
+  <input id="inputCurr" type="number" min="0" ng-model="invoice.inputValue">
+  <select data-ng-model="invoice.inCurr">
+    <option data-ng-repeat="curr in invoice.currencies">{{curr}}</option>
+  </select>
+  <br/>
+  <br/>
+  <input id="oututCurr" type="number" min="0" ng-model="invoice.output()">
+  <select data-ng-model="invoice.outCurr">
+    <option data-ng-repeat="curr in invoice.currencies">{{curr}}</option>
+  </select>
+
+  <body data-ng-controller="TemperatureConverterController as temperature">
+    <h2>Temperature Converter</h2>
+  <input id="inputTemp" type="number" ng-model="temperature.inputValue">
+  <select data-ng-model="temperature.inUnit">
+    <option data-ng-repeat="unit in temperature.temperatureUnits">{{unit}}</option>
+  </select>
+  <br/>
+  <br/>
+  <input id="outputTemp" type="number" ng-model="temperature.output()">
+  <select data-ng-model="temperature.outUnit">
+    <option data-ng-repeat="unit in temperature.temperatureUnits">{{unit}}</option>
+  </select>
+
+
+
+  <script>
+    var app = angular.module("MyApp", []).
+  controller("InvoiceController", function() {
+  this.currencies = ['INR', 'EUR', 'USD'];
+  this.inCurr = "INR";
+  this.outCurr = "EUR";
+  this.inrToForeignRates = {
+    INR: 1,
+    EUR: 0.011,
+    USD: 0.012
+  };
+  this.inputValue = 10;
+  this.outputValue = function(input, inCurr, outCurr) {
+    return input * this.inrToForeignRates[outCurr] / this.inrToForeignRates[inCurr];
+  };
+  this.output = function() {
+    return this.outputValue(this.inputValue, this.inCurr, this.outCurr);
+  };
+});
+
+
+var app = angular.module("TemperatureConverterApp", []).
+  controller("TemperatureConverterController", function() {
+  this.temperatureUnits = ['Celsius', 'Fahrenheit', 'Kelvin'];
+  this.inUnit = "Celsius";
+  this.outUnit = "Fahrenheit";
+  this.convertToCelsius = {
+    Celsius: function(input) { return input; },
+    Fahrenheit: function(input) { return (input - 32) * 5 / 9; },
+    Kelvin: function(input) { return input - 273.15; }
+  };
+  this.convertFromCelsius = {
+    Celsius: function(input) { return input; },
+    Fahrenheit: function(input) { return input * 9 / 5 + 32; },
+    Kelvin: function(input) { return input + 273.15; }
+  };
+  this.inputValue = 0;
+  this.outputValue = function(input, inUnit, outUnit) {
+    return this.convertFromCelsius[inUnit](this.convertToCelsius[outUnit](input));
+  };
+  this.output = function() {
+    return this.outputValue(this.inputValue, this.inUnit, this.outUnit);
+  };
+});
+
+
+  </script>
+</body>
+
+</html>

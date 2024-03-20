@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="StudentRegistrationApp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration Form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="RegistrationController">
+
+    <h2>Student Registration Form</h2>
+
+    <form name="registrationForm" ng-submit="submitForm()" novalidate>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" ng-model="student.name" ng-required="true">
+        <span ng-show="registrationForm.name.$error.required && registrationForm.name.$dirty">Name is required.</span>
+
+        <br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" ng-model="student.email" ng-required="true">
+        <span ng-show="registrationForm.email.$error.required && registrationForm.email.$dirty">Email is required.</span>
+        <span ng-show="registrationForm.email.$error.email && registrationForm.email.$dirty">Invalid email address.</span>
+
+        <br><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" ng-model="student.dob" ng-required="true">
+        <span ng-show="registrationForm.dob.$error.required && registrationForm.dob.$dirty">Date of Birth is required.</span>
+
+        <br><br>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" ng-model="student.gender" ng-required="true">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        <span ng-show="registrationForm.gender.$error.required && registrationForm.gender.$dirty">Gender is required.</span>
+
+        <br><br>
+
+        <button type="submit" ng-disabled="registrationForm.$invalid">Submit</button>
+
+    </form>
+
+    <script>
+        angular.module('StudentRegistrationApp', [])
+            .controller('RegistrationController', function($scope) {
+                $scope.student = {};
+
+                $scope.submitForm = function() {
+                    // Check if form is valid
+                    if ($scope.registrationForm.$valid) {
+                        // Display success message
+                        alert('Registration Successful!\nName: ' + $scope.student.name +
+                            '\nEmail: ' + $scope.student.email +
+                            '\nDate of Birth: ' + $scope.student.dob +
+                            '\nGender: ' + $scope.student.gender);
+
+                        // Reset form
+                        $scope.student = {};
+                        $scope.registrationForm.$setPristine();
+                        $scope.registrationForm.$setUntouched();
+                    } else {
+                        // Display error message
+                        alert('Please fill in all required fields correctly.');
+                    }
+                };
+            });
+    </script>
+
+</body>
+
+</html>
